@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>book</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+    $(()=>{
+        
+       
+        $("#bookid").blur(()=>{
+                let input={bookid:$("#bookid").val()};
+
+                let ajx={
+                    data:input,
+                    url:"http://localhost:82/getBookDetails",
+                    type:"get",
+                    datatype:"json",
+                    success:(dataReceived)=>{
+                        if(dataReceived.status==true)
+                        {
+                            $("#bookname").val(dataReceived.bookDetails.bookname);
+                            $("#price").val(dataReceived.bookDetails.price);
+                            $("#msg1").text("bookid found");
+                        }
+                        else
+                        {
+                            $("#bookname").val("");
+                            $("#price").val("");
+                            $("#msg1").text("bookid not found");
+
+                        }
+                    },
+                    error:(dataReceived)=>{console.log(dataReceived)}
+                };
+                $.ajax(ajx);
+        });
+        
+
+        $("#update").click(()=>{
+                let input={bookid:$("#bookid").val(),bookname:$("#bookname").val(),price:$("#price").val()};
+
+                let ajx={
+                    data:input,
+                    url:"http://localhost:82/updateBookDetails",
+                    type:"get",
+                    datatype:"json",
+                    success:(dataReceived)=>{
+                        if(dataReceived.status==true)
+                        {
+                            $("#msg1").text("book details updated successfully");
+                        }
+                        else
+                        {
+                            $("#msg1").text("book details not updated ");
+                        }
+                    },
+
+                    error:(dataReceived)=>{
+                        console.log(dataReceived);
+                    }
+                };
+                $.ajax(ajx);
+        });
+    
+    });
+
+</script>
+</head>
+<body>
+    <input type="text" placeholder="book id" id="bookid">
+    <span id="msg1">message</span>
+    <br><br>
+    <input type="text" placeholder="book name" id="bookname">
+    <br><br>
+    <input type="text" placeholder="price" id="price">
+    <br><br>
+    <button id="update">update book</button>
+</body>
+</html>
